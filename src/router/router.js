@@ -9,6 +9,7 @@ import PostsForAuthors from "../adminPanel/postsForAuthors";
 import TextEditor from "../textEditor";
 import PrivateRoute from "./privateRoute";
 import AdminRoute from "./adminRoute";
+import EditPost from "../editPost";
 
 const history = createBrowserHistory();
 
@@ -32,6 +33,11 @@ export default function AppRouter() {
           component={PostsForAdmin}
         />
         <PrivateRoute path="/createPost" exact={true} component={TextEditor} />
+        <PrivateRoute
+          path="/edit-post/:slug"
+          exact={true}
+          component={EditPost}
+        />
       </Switch>
     </Router>
   );

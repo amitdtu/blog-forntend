@@ -6,6 +6,15 @@ import axios from "axios";
 import AlertBlock from "../alertBlock";
 
 export default function BlogsTable({ posts, isRefresh }) {
+  function capitalizeFirstLetter(str) {
+    let splitStr = str.toLowerCase().split(" ");
+    for (let i = 0; i < splitStr.length; i++) {
+      splitStr[i] =
+        splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+    }
+    return splitStr.join(" ");
+  }
+
   const { user } = useContext(AuthContext);
 
   const history = useHistory();
@@ -117,9 +126,9 @@ export default function BlogsTable({ posts, isRefresh }) {
                       })
                     }
                   >
-                    {post.title}
+                    {capitalizeFirstLetter(post.title)}
                   </td>
-                  <td>{post.author.username}</td>
+                  <td>{capitalizeFirstLetter(post.author.username)}</td>
                   <td>
                     {user?.role === "admin" ? (
                       <Fragment>
@@ -128,7 +137,7 @@ export default function BlogsTable({ posts, isRefresh }) {
                           <Button
                             onClick={() => publishPostHandler(post._id)}
                             variant="primary"
-                            className="mr-4"
+                            className="mr-2"
                             size="sm"
                           >
                             Publish
@@ -139,6 +148,7 @@ export default function BlogsTable({ posts, isRefresh }) {
                           <Button
                             onClick={() => rejectPostHandler(post._id)}
                             variant="danger"
+                            className="mr-2"
                             size="sm"
                           >
                             Reject
@@ -146,14 +156,43 @@ export default function BlogsTable({ posts, isRefresh }) {
                         ) : null}
                       </Fragment>
                     ) : (
+                      <Fragment>
+                        <Button
+                          onClick={() => deletePostHandler(post._id)}
+                          variant="danger"
+                          className="mr-2"
+                          size="sm"
+                        >
+                          Delete
+                        </Button>
+                        <Button
+                          onClick={() =>
+                            history.push({
+                              pathname: `/edit-post/${post.slug}`,
+                              state: { postId: post._id },
+                            })
+                          }
+                          variant="primary"
+                          size="sm"
+                        >
+                          Edit
+                        </Button>
+                      </Fragment>
+                    )}
+                    {post.author.role === "admin" ? (
                       <Button
-                        onClick={() => deletePostHandler(post._id)}
-                        variant="danger"
+                        onClick={() =>
+                          history.push({
+                            pathname: `/edit-post/${post.slug}`,
+                            state: { postId: post._id },
+                          })
+                        }
+                        variant="primary"
                         size="sm"
                       >
-                        Delete
+                        Edit
                       </Button>
-                    )}
+                    ) : null}
                   </td>
                 </tr>
               ))

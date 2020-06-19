@@ -1,5 +1,5 @@
 import React, { useState, useContext, Fragment } from "react";
-import { Navbar, Nav } from "react-bootstrap";
+import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import LoginModal from "./loginAndSignUp/login";
 import SignupModal from "./loginAndSignUp/signUp";
 import { useHistory, Link } from "react-router-dom";
@@ -8,6 +8,10 @@ import AuthContext from "./authContext";
 export default function Menubar() {
   const { user, isAuthenticated } = useContext(AuthContext);
   const history = useHistory();
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
 
   const [showLogin, setShowLogin] = useState(false);
   const [showSignup, setShowSignup] = useState(false);
@@ -58,6 +62,19 @@ export default function Menubar() {
               <Nav.Link onClick={() => history.push("/createPost")}>
                 Create Blog
               </Nav.Link>
+              <Nav.Link>
+                Hi{" "}
+                {user
+                  ? capitalizeFirstLetter(user.username.split(" ")[0])
+                  : null}
+              </Nav.Link>
+              <Nav.Link>Logout</Nav.Link>
+              {/* <NavDropdown
+                title={user?.username.split(" ")[0]}
+                id="basic-nav-dropdown"
+              >
+                <NavDropdown.Item>Logout</NavDropdown.Item>
+              </NavDropdown> */}
             </Fragment>
           ) : null}
 

@@ -7,7 +7,19 @@ import { Formik } from "formik";
 import axios from "axios";
 import AlertBlock from "./alertBlock";
 
-export default function TextEditor() {
+export default function TextEditor({ post }) {
+  // if post data is avaliable
+  const initialValues = () => {
+    let obj = {};
+    if (post) {
+      obj.title = post.title;
+      obj.tags = post.tags;
+      obj.category = post.category;
+      obj.description = post.description;
+    }
+    return obj;
+  };
+
   // const [validated, setValidated] = useState(false);
   //   const [formData, setFormData] = useState({});
   const [content, setContent] = useState();
@@ -21,14 +33,22 @@ export default function TextEditor() {
 
   const formSubmitHandler = (values) => {
     const valuesWithContent = { ...values, content: content };
-    const url = "/posts/my-posts";
-    axios
-      .post(url, valuesWithContent, { withCredentials: true })
-      .then((res) => {
+
+    if (post) {
+      const url = `/posts/my-posts/${post._id}`;
+      axios.patch(url, valuesWithContent).then((res) => {
         console.log(res.data);
         setAlertBlockData(res.data.message);
         setShowAlert(true);
       });
+    } else {
+      const url = "/posts/my-posts";
+      axios.post(url, valuesWithContent).then((res) => {
+        console.log(res.data);
+        setAlertBlockData(res.data.message);
+        setShowAlert(true);
+      });
+    }
   };
 
   // useEffect(() => {
@@ -50,7 +70,7 @@ export default function TextEditor() {
       <Formik
         validationSchema={schema}
         onSubmit={(values) => formSubmitHandler(values)}
-        initialValues={{}}
+        initialValues={initialValues()}
       >
         {({
           handleSubmit,
@@ -136,7 +156,7 @@ export default function TextEditor() {
             </Form.Group>
             <label>Content</label>
             <SunEditor
-              setContents="<h3>My contents</h3>"
+              setContents={post ? post.content : ""}
               onChange={handleChangeEditor}
               setDefaultStyle="font-family: cursive; font-size: 13px;"
               setOptions={{
