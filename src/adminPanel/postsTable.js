@@ -3,6 +3,7 @@ import { Nav, Container, Table, Button, Toast, Alert } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import AuthContext from "../authContext";
 import axios from "axios";
+import AlertBlock from "../alertBlock";
 
 export default function BlogsTable({ posts, isRefresh }) {
   const { user } = useContext(AuthContext);
@@ -65,24 +66,7 @@ export default function BlogsTable({ posts, isRefresh }) {
 
   return (
     <Container className="mt-4">
-      <Toast
-        className="text-center"
-        style={{ display: "block", margin: "auto" }}
-        onClose={() => setShow(false)}
-        show={show}
-        delay={1500}
-        autohide
-      >
-        <Toast.Body
-          style={{
-            color: "#155724",
-            backgroundColor: "#d4edda",
-            borderColor: "#c3e6cb",
-          }}
-        >
-          {toastData}
-        </Toast.Body>
-      </Toast>
+      <AlertBlock show={show} setShow={setShow} data={toastData} />
       <Nav variant="tabs" defaultActiveKey="link-1">
         <Nav.Item>
           <Nav.Link

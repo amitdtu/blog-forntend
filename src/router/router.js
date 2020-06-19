@@ -7,6 +7,8 @@ import MenuBar from "../navbar";
 import PostsForAdmin from "../adminPanel/postsForAdmin";
 import PostsForAuthors from "../adminPanel/postsForAuthors";
 import TextEditor from "../textEditor";
+import PrivateRoute from "./privateRoute";
+import AdminRoute from "./adminRoute";
 
 const history = createBrowserHistory();
 
@@ -23,9 +25,13 @@ export default function AppRouter() {
         <Route path="/politics" exact={true} component={HomePage} />
 
         <Route path="/post/:postId" exact={true} component={Post} />
-        <Route path="/posts" exact={true} component={PostsForAuthors} />
-        <Route path="/posts-admin" exact={true} component={PostsForAdmin} />
-        <Route path="/createPost" exact={true} component={TextEditor} />
+        <PrivateRoute path="/posts" exact={true} component={PostsForAuthors} />
+        <AdminRoute
+          path="/posts-admin"
+          exact={true}
+          component={PostsForAdmin}
+        />
+        <PrivateRoute path="/createPost" exact={true} component={TextEditor} />
       </Switch>
     </Router>
   );

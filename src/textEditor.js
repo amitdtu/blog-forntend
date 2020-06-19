@@ -5,11 +5,14 @@ import { Container, Form, Button } from "react-bootstrap";
 import * as yup from "yup";
 import { Formik } from "formik";
 import axios from "axios";
+import AlertBlock from "./alertBlock";
 
 export default function TextEditor() {
   // const [validated, setValidated] = useState(false);
   //   const [formData, setFormData] = useState({});
   const [content, setContent] = useState();
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertBlockData, setAlertBlockData] = useState(null);
 
   const handleChangeEditor = (content1) => {
     console.log(content1);
@@ -23,6 +26,8 @@ export default function TextEditor() {
       .post(url, valuesWithContent, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
+        setAlertBlockData(res.data.message);
+        setShowAlert(true);
       });
   };
 
@@ -121,7 +126,7 @@ export default function TextEditor() {
               >
                 <option>select category</option>
                 <option>health</option>
-                <option>polotics</option>
+                <option>politics</option>
                 <option>technology</option>
                 <option>trending</option>
                 <Form.Control.Feedback type="invalid">
@@ -165,6 +170,11 @@ export default function TextEditor() {
           </Form>
         )}
       </Formik>
+      <AlertBlock
+        show={showAlert}
+        setShow={setShowAlert}
+        data={alertBlockData}
+      />
     </Container>
   );
 }
