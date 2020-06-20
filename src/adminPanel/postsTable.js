@@ -18,15 +18,11 @@ export default function BlogsTable({ posts, isRefresh }) {
   const { user } = useContext(AuthContext);
 
   const history = useHistory();
-  //   console.log(location);
-  console.log(posts);
 
   const [displayPosts, setDisplayPosts] = useState(null);
   const [actionButton, setActionButton] = useState("pendingPosts");
   const [toastData, setToastData] = useState("test data");
   const [show, setShow] = useState(false);
-
-  console.log(displayPosts);
 
   useEffect(() => {
     setDisplayPosts(posts[actionButton]);
@@ -35,7 +31,6 @@ export default function BlogsTable({ posts, isRefresh }) {
   const publishPostHandler = (postId) => {
     const url = "/posts/approve/" + postId;
     axios.post(url).then((res) => {
-      console.log(res.data);
       setShow(true);
       setToastData(res.data.message);
       setDisplayPosts(displayPosts.filter((el) => el._id !== postId));
@@ -46,7 +41,6 @@ export default function BlogsTable({ posts, isRefresh }) {
   const rejectPostHandler = (postId) => {
     const url = "/posts/reject/" + postId;
     axios.post(url).then((res) => {
-      console.log(res.data);
       setShow(true);
       setToastData(res.data.message);
       setDisplayPosts(displayPosts.filter((el) => el._id !== postId));
@@ -56,7 +50,6 @@ export default function BlogsTable({ posts, isRefresh }) {
   const deletePostHandler = (postId) => {
     const url = "/posts/my-posts/" + postId;
     axios.delete(url).then((res) => {
-      console.log(res.data);
       setShow(true);
       setToastData(res.data.message);
       setDisplayPosts(displayPosts.filter((el) => el._id !== postId));
@@ -67,8 +60,6 @@ export default function BlogsTable({ posts, isRefresh }) {
   const changeDisplayPosts = (typeOfPosts) => {
     setDisplayPosts(posts[typeOfPosts]);
     setActionButton(typeOfPosts);
-    console.log("another type of post ", typeOfPosts);
-    console.log(actionButton);
   };
 
   if (!displayPosts) return <div>Loading...</div>;
@@ -114,7 +105,7 @@ export default function BlogsTable({ posts, isRefresh }) {
         <tbody>
           {displayPosts.length
             ? displayPosts.map((post, i) => (
-                <tr>
+                <tr key={i}>
                   <td>{i + 1}</td>
                   <td
                     className="text-primary"
@@ -147,7 +138,7 @@ export default function BlogsTable({ posts, isRefresh }) {
                         actionButton === "approvedPosts" ? (
                           <Button
                             onClick={() => rejectPostHandler(post._id)}
-                            variant="danger"
+                            variant="warning"
                             className="mr-2"
                             size="sm"
                           >
@@ -172,7 +163,7 @@ export default function BlogsTable({ posts, isRefresh }) {
                               state: { postId: post._id },
                             })
                           }
-                          variant="primary"
+                          variant="info"
                           size="sm"
                         >
                           Edit
@@ -180,18 +171,29 @@ export default function BlogsTable({ posts, isRefresh }) {
                       </Fragment>
                     )}
                     {post.author.role === "admin" ? (
-                      <Button
-                        onClick={() =>
-                          history.push({
-                            pathname: `/edit-post/${post.slug}`,
-                            state: { postId: post._id },
-                          })
-                        }
-                        variant="primary"
-                        size="sm"
-                      >
-                        Edit
-                      </Button>
+                      <Fragment>
+                        <Button
+                          onClick={() =>
+                            history.push({
+                              pathname: `/edit-post/${post.slug}`,
+                              state: { postId: post._id },
+                            })
+                          }
+                          variant="info"
+                          size="sm"
+                          className="mr-2"
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          onClick={() => deletePostHandler(post._id)}
+                          variant="danger"
+                          className="mr-2"
+                          size="sm"
+                        >
+                          Delete
+                        </Button>
+                      </Fragment>
                     ) : null}
                   </td>
                 </tr>
@@ -200,7 +202,9 @@ export default function BlogsTable({ posts, isRefresh }) {
         </tbody>
       </Table>
       {displayPosts.length === 0 ? (
-        <div className="mt-4 text-center">No Post</div>
+        <div className="mt-4 text-center">
+          <h4>No Post</h4>
+        </div>
       ) : null}
     </Container>
   );

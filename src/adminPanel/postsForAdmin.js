@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PostsTable from "./postsTable";
 import axios from "axios";
+import Spinner from "../spinner";
 
 export default function PostsForAdmin() {
   const [posts, setPosts] = useState(null);
@@ -11,7 +12,6 @@ export default function PostsForAdmin() {
   useEffect(() => {
     const url = "/posts/all-posts";
     axios.get(url).then((res) => {
-      console.log(res.data);
       const {
         data: { data },
       } = res;
@@ -22,7 +22,7 @@ export default function PostsForAdmin() {
     });
   }, [randomNumber]);
 
-  if (!posts) return <div>Loading...</div>;
+  if (!posts) return <Spinner />;
 
   return (
     <div>

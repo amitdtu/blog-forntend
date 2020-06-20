@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
+import randomcolor from "randomcolor";
+import Spinner from "../spinner";
 
 export default function Cards({ category }) {
   const history = useHistory();
@@ -15,7 +17,6 @@ export default function Cards({ category }) {
         const {
           data: { data },
         } = res;
-        console.log(data);
         if (category) {
           const filteredPosts = data.filter((el) => el.category === category);
           setPostsByCategory(filteredPosts);
@@ -36,6 +37,7 @@ export default function Cards({ category }) {
   const cards = (postsArray) => {
     return postsArray?.map((post, index) => (
       <article
+        style={{ cursor: "pointer" }}
         key={index}
         onClick={() =>
           history.push({
@@ -46,7 +48,14 @@ export default function Cards({ category }) {
         className={"style" + index + 1}
       >
         <span className="image">
-          <img src="https://picsum.photos/200/300" alt="" />
+          {post.coverImage !== "null" ? (
+            <img
+              src={`${axios.defaults.params.mediaURL}/img/posts/${post.coverImage}`}
+              alt=""
+            />
+          ) : (
+            <img src={"https://picsum.photos/500/500"} alt="" />
+          )}
         </span>
         <a>
           <h2>{post.title}</h2>
@@ -65,7 +74,7 @@ export default function Cards({ category }) {
     tiles = cards(postsByCategory);
   }
 
-  if (!tiles) return <div>Loading...</div>;
+  if (!tiles) return <Spinner />;
 
   return (
     <div id="main">
@@ -84,7 +93,13 @@ export default function Cards({ category }) {
           </p>
         </header> */}
         <section className="tiles">
-          {tiles.length ? tiles : <div>No Posts</div>}
+          {tiles.length ? (
+            tiles
+          ) : (
+            <div className="mt-4 text-center w-100">
+              <h4>No Post</h4>
+            </div>
+          )}
         </section>
       </div>
     </div>

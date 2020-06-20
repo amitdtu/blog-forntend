@@ -2,7 +2,7 @@ import React from "react";
 import { createBrowserHistory } from "history";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import HomePage from "../homePage/homePage";
-import Post from "../generic";
+import Post from "../singlePost";
 import MenuBar from "../navbar";
 import PostsForAdmin from "../adminPanel/postsForAdmin";
 import PostsForAuthors from "../adminPanel/postsForAuthors";
@@ -10,6 +10,8 @@ import TextEditor from "../textEditor";
 import PrivateRoute from "./privateRoute";
 import AdminRoute from "./adminRoute";
 import EditPost from "../editPost";
+import ForgotPassword from "../forgotPassword";
+import ResetPassword from "../resetPassword";
 
 const history = createBrowserHistory();
 
@@ -24,6 +26,17 @@ export default function AppRouter() {
         <Route path="/health" exact={true} component={HomePage} />
         <Route path="/trending" exact={true} component={HomePage} />
         <Route path="/politics" exact={true} component={HomePage} />
+
+        <PrivateRoute
+          path="/forgotPassword"
+          exact={true}
+          component={ForgotPassword}
+        />
+        <PrivateRoute
+          path="/resetPassword/:resetToken"
+          exact={true}
+          component={ResetPassword}
+        />
 
         <Route path="/post/:postId" exact={true} component={Post} />
         <PrivateRoute path="/posts" exact={true} component={PostsForAuthors} />

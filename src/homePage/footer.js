@@ -1,15 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 
 export default function Footer() {
+  const [data, setData] = useState();
+  const [showAlert, setShowAlert] = useState(false);
+
+  const submitFormHandler = (e) => {
+    const url = "/contactMe";
+    let reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+    if (data?.name || data?.email || data?.message) {
+      if (reg.test(data?.email)) {
+        e.preventDefault();
+        axios.post(url, data).then((res) => {});
+      }
+    }
+  };
+
+  const inputChangeHandler = (e) => {
+    setData({ ...data, [e.target.name]: e.target.value });
+    setShowAlert(false);
+  };
+
   return (
     <footer id="footer">
       <div className="inner">
         <section>
           <h2>Get in touch</h2>
-          <form method="post" action="#">
+          <form>
             <div className="fields">
               <div className="field half">
-                <input type="text" name="name" id="name" placeholder="Name" />
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  required
+                  onChange={inputChangeHandler}
+                  placeholder="Name"
+                />
               </div>
               <div className="field half">
                 <input
@@ -17,6 +45,8 @@ export default function Footer() {
                   name="email"
                   id="email"
                   placeholder="Email"
+                  required
+                  onChange={inputChangeHandler}
                 />
               </div>
               <div className="field">
@@ -24,7 +54,8 @@ export default function Footer() {
                   name="message"
                   id="message"
                   placeholder="Message"
-                  defaultValue={""}
+                  required
+                  onChange={inputChangeHandler}
                 />
               </div>
             </div>
@@ -34,7 +65,7 @@ export default function Footer() {
                   type="submit"
                   defaultValue="Send"
                   id="submit"
-                  className="primary"
+                  onClick={submitFormHandler}
                 />
               </li>
             </ul>
@@ -43,36 +74,6 @@ export default function Footer() {
         <section>
           <h2>Follow</h2>
           <ul className="icons">
-            {/* <li>
-              <a href="#" className="icon brands style2 fa-twitter">
-                <span className="label">Twitter</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="icon brands style2 fa-facebook-f">
-                <span className="label">Facebook</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="icon brands style2 fa-instagram">
-                <span className="label">Instagram</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="icon brands style2 fa-dribbble">
-                <span className="label">Dribbble</span>
-              </a>
-            </li>
-            <li>
-              <a href="#" className="icon brands style2 fa-500px">
-                <span className="label">500px</span>
-              </a>
-            </li> 
-            <li>
-              <a href="#" className="icon solid style2 fa-phone">
-                <span className="label">Phone</span>
-              </a>
-            </li>*/}
             <li>
               <a
                 onClick={() => window.open("http://github.com/amitdtu")}

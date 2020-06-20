@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
 import renderHTML from "react-render-html";
+import Spinner from "./spinner";
 
 export default function Post() {
   const location = useLocation();
@@ -11,8 +12,6 @@ export default function Post() {
   const { postId } = useParams();
 
   useEffect(() => {
-    console.log(location);
-
     const postId = location.state.postId;
 
     const url = `/posts/${postId}`;
@@ -21,14 +20,11 @@ export default function Post() {
       const {
         data: { data },
       } = res;
-      console.log(data);
       setPost(data);
     });
-
-    console.log(postId);
   }, []);
 
-  if (!post) return <div>Loading...</div>;
+  if (!post) return <Spinner />;
 
   return (
     <div id="wrapper">
@@ -71,7 +67,10 @@ export default function Post() {
         <div className="inner">
           <h1>{post.title}</h1>
           <span className="image main">
-            {/* <img src="https://picsum.photos/200/300" alt /> */}
+            {/* <img
+              src={`${axios.defaults.params.mediaURL}/img/posts/${post.coverImage}`}
+              alt
+            /> */}
           </span>
           {/* {post.content} */}
           {renderHTML(post.content)}

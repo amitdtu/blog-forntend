@@ -1,12 +1,15 @@
-import React, { useContext } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import React, { useContext, useState } from "react";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import * as yup from "yup";
 import { Formik } from "formik";
 import axios from "axios";
 import AuthContext from "../authContext";
+import { Link } from "react-router-dom";
 
 export default function Login(props) {
   const { setIsAuthenticated, setUser } = useContext(AuthContext);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const schema = yup.object({
     email: yup.string().email().required(),
@@ -14,21 +17,23 @@ export default function Login(props) {
   });
 
   const formSubmitHandler = (values) => {
+    setIsLoading(true);
     const url = "users/login";
-    console.log(values);
     axios
       .post(url, values)
       .then((res) => {
         const {
           data: { data },
         } = res;
-        console.log(res);
         setIsAuthenticated(true);
         setUser(data.user);
         props.handleCloseLogin();
-        // axios.defaults.headers.common["Authorization"] = "AUTH_TOKEN";
+        setIsLoading(false);
       })
-      .catch((err) => console.log(err?.response?.data));
+      .catch((err) => {
+        console.log(err?.response?.data);
+        setIsLoading(false);
+      });
   };
 
   return (
@@ -85,10 +90,29 @@ export default function Login(props) {
                     {errors.password}
                   </Form.Control.Feedback>
                 </Form.Group>
-                <Button type="submit">Login</Button>
+                <Button type="submit">
+                  {isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="false"
+                      className="mr-2"
+                    />
+                  ) : null}
+                  Login
+                </Button>
               </Form>
             )}
           </Formik>
+          <Link
+            onClick={() => props.handleCloseLogin()}
+            style={{ textDecoration: "none" }}
+            to="/forgotPassword"
+          >
+            forgot password
+          </Link>
         </Modal.Body>
         {/* <Modal.Footer>
           <Button variant="secondary" onClick={props.handleCloseLogin}>

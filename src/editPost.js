@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
-import TextEditor from "./textEditor"
+import TextEditor from "./textEditor";
+import Spinner from "./spinner";
 
 export default function EditPost() {
   const location = useLocation();
@@ -15,13 +16,11 @@ export default function EditPost() {
       const {
         data: { data },
       } = res;
-      setPost(data)
-      console.log(res.data);
+      setPost(data);
     });
   }, []);
 
-
-  if(!post) return <div>Loading...</div>;
+  if (!post) return <Spinner />;
 
   return <TextEditor post={post} />;
 }

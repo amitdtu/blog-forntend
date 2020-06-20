@@ -4,9 +4,12 @@ import LoginModal from "./loginAndSignUp/login";
 import SignupModal from "./loginAndSignUp/signUp";
 import { useHistory, Link } from "react-router-dom";
 import AuthContext from "./authContext";
+import axios from "axios";
 
 export default function Menubar() {
-  const { user, isAuthenticated } = useContext(AuthContext);
+  const { user, isAuthenticated, setIsAuthenticated, setUser } = useContext(
+    AuthContext
+  );
   const history = useHistory();
 
   function capitalizeFirstLetter(string) {
@@ -21,6 +24,15 @@ export default function Menubar() {
 
   const handleShowSignup = () => setShowSignup(true);
   const handleCloseSignup = () => setShowSignup(false);
+
+  const logoutUserHandler = () => {
+    const url = "/users/logout";
+
+    axios.get(url).then((res) => {
+      setIsAuthenticated(false);
+      setUser(null);
+    });
+  };
 
   return (
     <div>
@@ -68,7 +80,7 @@ export default function Menubar() {
                   ? capitalizeFirstLetter(user.username.split(" ")[0])
                   : null}
               </Nav.Link>
-              <Nav.Link>Logout</Nav.Link>
+              <Nav.Link onClick={logoutUserHandler}>Logout</Nav.Link>
               {/* <NavDropdown
                 title={user?.username.split(" ")[0]}
                 id="basic-nav-dropdown"

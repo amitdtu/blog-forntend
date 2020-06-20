@@ -1,14 +1,43 @@
-import React from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import React, { useState, useContext } from "react";
+import { Modal, Button, Form, Spinner } from "react-bootstrap";
 import * as yup from "yup";
 import { Formik } from "formik";
+import AuthContext from "../authContext";
+import axios from "axios";
 
 export default function Signup(props) {
   const schema = yup.object({
     email: yup.string().email().required(),
+    username: yup.string().required(),
     password: yup.string().required(),
-    passwordConfirm: yup.string().required(),
+    passwordConfirm: yup
+      .string()
+      .required()
+      .oneOf([yup.ref("password"), null], "Passwords don't match"),
   });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const { setIsAuthenticated, setUser } = useContext(AuthContext);
+
+  const formSubmitHandler = (values) => {
+    setIsLoading(true);
+    const url = "users/signup";
+    axios
+      .post(url, values)
+      .then((res) => {
+        const {
+          data: { data },
+        } = res;
+        setIsAuthenticated(true);
+        setUser(data.user);
+        setIsLoading(false);
+        props.handleCloseLogin();
+      })
+      .catch((err) => {
+        console.log(err?.response?.data);
+        setIsLoading(false);
+      });
+  };
 
   return (
     <>
@@ -19,7 +48,7 @@ export default function Signup(props) {
         <Modal.Body>
           <Formik
             validationSchema={schema}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) => formSubmitHandler(values)}
             initialValues={{}}
           >
             {({
@@ -46,6 +75,22 @@ export default function Signup(props) {
                   />
                   <Form.Control.Feedback type="invalid">
                     {errors.email}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group controlId="validationFormik01">
+                  <Form.Label>Username</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    value={values.username}
+                    onChange={handleChange}
+                    isValid={touched.username && !errors.username}
+                    isInvalid={!!errors.username}
+                    feedback={errors.username}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {errors.username}
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Form.Group controlId="validationFormik02">
@@ -81,6 +126,16 @@ export default function Signup(props) {
                   </Form.Control.Feedback>
                 </Form.Group>
                 <Button onClick={props.handleCloseSignup} type="submit">
+                  {isLoading ? (
+                    <Spinner
+                      as="span"
+                      animation="border"
+                      size="sm"
+                      role="status"
+                      aria-hidden="false"
+                      className="mr-2"
+                    />
+                  ) : null}
                   Signup
                 </Button>
               </Form>

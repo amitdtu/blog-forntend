@@ -7,7 +7,6 @@ import { useLocation } from "react-router-dom";
 export default function HomePage() {
   const location = useLocation();
   const category = location.pathname.replace("/", "");
-  console.log("category " + category);
   return (
     <div>
       <title>Phantom by HTML5 UP</title>
