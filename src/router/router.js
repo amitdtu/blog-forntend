@@ -12,6 +12,7 @@ import AdminRoute from "./adminRoute";
 import EditPost from "../editPost";
 import ForgotPassword from "../forgotPassword";
 import ResetPassword from "../resetPassword";
+import ErrorPage from "../errorPage";
 
 const history = createBrowserHistory();
 
@@ -51,6 +52,7 @@ export default function AppRouter() {
           exact={true}
           component={EditPost}
         />
+        <Route path="*" component={ErrorPage} />
       </Switch>
     </Router>
   );

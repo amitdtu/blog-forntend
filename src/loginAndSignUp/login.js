@@ -40,7 +40,7 @@ export default function Login(props) {
     <>
       <Modal show={props.showLogin} onHide={props.handleCloseLogin}>
         <Modal.Header closeButton>
-          <Modal.Title>Login</Modal.Title>
+          <Modal.Title>Login (for authors)</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik

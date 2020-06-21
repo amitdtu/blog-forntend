@@ -11,7 +11,7 @@ export default function Cards({ category }) {
   const [postsByCategory, setPostsByCategory] = useState(null);
 
   useEffect(() => {
-    const url = "/posts";
+    const url = "/posts/simple";
     if (!posts) {
       axios.get(url).then((res) => {
         const {

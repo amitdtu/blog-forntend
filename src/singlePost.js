@@ -14,7 +14,7 @@ export default function Post() {
   useEffect(() => {
     const postId = location.state.postId;
 
-    const url = `/posts/${postId}`;
+    const url = `/posts/simple/${postId}`;
 
     axios.get(url).then((res) => {
       const {
@@ -63,7 +63,7 @@ export default function Post() {
       </nav> */}
 
       {/* Main */}
-      <div id="main" style={{ marginTop: "5em" }}>
+      <div id="main" style={{ marginTop: "5em", fontFamily: "Georgia, serif" }}>
         <div className="inner">
           <h1>{post.title}</h1>
           <span className="image main">
@@ -73,6 +73,7 @@ export default function Post() {
             /> */}
           </span>
           {/* {post.content} */}
+
           {renderHTML(post.content)}
         </div>
       </div>

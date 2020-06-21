@@ -43,7 +43,7 @@ export default function Signup(props) {
     <>
       <Modal show={props.showSignup} onHide={props.handleCloseSignup}>
         <Modal.Header closeButton>
-          <Modal.Title>Signup</Modal.Title>
+          <Modal.Title>Signup (for authors)</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Formik
