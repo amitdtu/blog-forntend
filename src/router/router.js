@@ -9,6 +9,7 @@ import PostsForAuthors from "../adminPanel/postsForAuthors";
 import TextEditor from "../textEditor";
 import PrivateRoute from "./privateRoute";
 import AdminRoute from "./adminRoute";
+import UnauthenticatedRoute from "./unauthRoute";
 import EditPost from "../editPost";
 import ForgotPassword from "../forgotPassword";
 import ResetPassword from "../resetPassword";
@@ -28,12 +29,12 @@ export default function AppRouter() {
         <Route path="/trending" exact={true} component={HomePage} />
         <Route path="/politics" exact={true} component={HomePage} />
 
-        <PrivateRoute
+        <UnauthenticatedRoute
           path="/forgotPassword"
           exact={true}
           component={ForgotPassword}
         />
-        <PrivateRoute
+        <UnauthenticatedRoute
           path="/resetPassword/:resetToken"
           exact={true}
           component={ResetPassword}

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
 import AuthContext from "../authContext";
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
+const UnauthenticatedRoute = ({ component: Component, ...rest }) => {
   const { isAuthenticated } = useContext(AuthContext);
   return (
     // Show the component only when the user is logged in
@@ -10,10 +10,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
     <Route
       {...rest}
       render={(props) =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/" />
+        !isAuthenticated ? <Component {...props} /> : <Redirect to="/" />
       }
     />
   );
 };
 
-export default PrivateRoute;
+export default UnauthenticatedRoute;
